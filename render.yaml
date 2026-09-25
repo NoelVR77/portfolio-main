@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: portfolio-backend
+    env: python
+    region: oregon
+    plan: free
+    repo: .
+    branch: main
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: gunicorn -k uvicorn.workers.UvicornWorker server:app
+    envVars:
+      - key: MONGO_URL
+        generate: false
+        value: ""
+      - key: DB_NAME
+        generate: false
+        value: ""
+    path: backend

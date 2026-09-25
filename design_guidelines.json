@@ -1,0 +1,147 @@
+{
+  "project_name": "Noel Vincent Ramli — UI/UX & Experimental Visual Portfolio",
+  "archetype": "Editorial & Brutalist Poster (Black/White/Signal Red)",
+  "emotional_tone": "High-impact, avant-garde, precise, creative, editorial poster tension",
+  "theme": {
+    "base": "dark",
+    "primary_background": "#050505",
+    "surface_card": "#0F0F10",
+    "surface_border": "#222225",
+    "accent_red": "#FF2A2A",
+    "pacman_yellow": "#FFE600",
+    "text_main": "#FFFFFF",
+    "text_muted": "#A1A1AA",
+    "accent_subtle": "#1C1C21"
+  },
+  "typography": {
+    "heading_font": "Syne, Clash Display, Unbounded or Cabinet Grotesk (Display, heavy tracking, poster scale)",
+    "body_font": "General Sans or Inter (Clean, high legibility, 1.6 line height)",
+    "mono_font": "JetBrains Mono (For metadata, timestamps, tech stack tags, coordinates)",
+    "scale": {
+      "hero_title": "text-5xl sm:text-7xl lg:text-8xl font-black uppercase tracking-tighter leading-none",
+      "section_title": "text-3xl sm:text-5xl font-extrabold uppercase tracking-tight",
+      "card_title": "text-xl sm:text-2xl font-bold tracking-tight",
+      "label_mono": "text-xs font-mono uppercase tracking-widest text-red-500"
+    }
+  },
+  "layout_system": {
+    "mode": "Mode A: Tetris Asymmetric Grid + Swiss Editorial Stacking",
+    "spacing": "Generous spacing (py-20 to py-32 for sections, gap-8 to gap-12 for grids)",
+    "container_padding": "px-4 sm:px-8 lg:px-16 max-w-7xl mx-auto"
+  },
+  "sections": [
+    {
+      "id": "pacman_intro",
+      "name": "Pac-Man Arcade Intro Loader",
+      "description": "Interactive HTML5/Canvas moving Pac-Man animation eating dots across an arcade grid with score tracker 'NOEL RAMLI — UI/UX PORTFOLIO v2.0'. Features auto-entry after 3.5s or immediate Skip option.",
+      "key_elements": [
+        "Moving Pac-Man character eating dots along a neon line",
+        "Retro arcade header with HIGH SCORE: 19982026",
+        "Interactive 'SKIP INTRO [ESC / CLICK]' button with data-testid='skip-intro-button'",
+        "Sound toggle visual indicator (Mute/Unmute toggle)",
+        "Smooth curtain exit transition into the main editorial hero"
+      ]
+    },
+    {
+      "id": "header_navigation",
+      "name": "Floating Glassmorphism Editorial Header",
+      "description": "Sticky top bar with sharp borders, glowing status indicator ('AVAILABLE FOR FREELANCE & FULLTIME'), section quick-links, and contact CTA.",
+      "key_elements": [
+        "Brand Logo: 'NVR / 01' with signal red dot indicator",
+        "Nav links: Projects, Experiments, About, Contact",
+        "Quick Action: 'Let's Talk' red pill button with data-testid='nav-contact-button'",
+        "Backdrop blur: backdrop-blur-md bg-black/80 border-b border-zinc-800/80"
+      ]
+    },
+    {
+      "id": "hero_section",
+      "name": "Editorial Poster Hero",
+      "description": "Bold giant oversized display typography featuring Noel Vincent Ramli as UI/UX Designer & Creative Technologist, integrated with dark studio portrait photography and interactive status tags.",
+      "key_elements": [
+        "Giant poster headline: 'NOEL VINCENT RAMLI — UI/UX & CREATIVE EXPERIMENTS'",
+        "Red Signal Banner: Highlighting specialization in Product Design, Design Systems, and Prototyping",
+        "Personal Portrait: High contrast editorial studio photo with hover glitch effect",
+        "Interactive Quick Stats: 15+ Projects Built, 4+ Years XP, 100% Pixel Precision",
+        "Primary CTAs: 'EXPLORE PROJECTS' with data-testid='hero-projects-cta' & 'DOWNLOAD CV' with data-testid='hero-cv-cta'"
+      ]
+    },
+    {
+      "id": "featured_projects",
+      "name": "UI/UX Case Studies & Project Showcase",
+      "description": "Filterable bento-grid showcase of original UI/UX projects with placeholder architecture designed for seamless future detail insertion.",
+      "key_elements": [
+        "Category Filter Tabs: 'All Projects', 'Mobile Apps', 'Web Platforms', 'Design Systems', 'SaaS'",
+        "Project Cards: High contrast dark device mockups, tags, role description, key metrics",
+        "Interactive Modal Preview: Clicking card opens deep-dive drawer with problem, solution, wireframes, and link placeholders",
+        "Data-testid on cards: data-testid='project-card-1', data-testid='project-card-2', etc."
+      ]
+    },
+    {
+      "id": "visual_experiments",
+      "name": "Creative Sandbox & Visual Poster Lab",
+      "description": "Avant-garde showcase of 3D explorations, poster graphics, kinetic typography, and mini UX experiments.",
+      "key_elements": [
+        "Asymmetric editorial grid with poster artwork and interactive canvas toys",
+        "Interactive Color Switcher & Type Scale Playground",
+        "Visual experiment cards with hover scale and signal-red border accent"
+      ]
+    },
+    {
+      "id": "about_me",
+      "name": "About Me & Design Philosophy",
+      "description": "Personal narrative section with personal studio photo, timeline of experience, design principles, and tech stack badges.",
+      "key_elements": [
+        "Personal Bio: 'Bridging technical engineering logic with radical editorial aesthetics'",
+        "Interactive Experience Timeline: Companies, roles, and milestone achievements",
+        "Toolbox Grid: Figma, Framer, React, Tailwind, Three.js, Photoshop, Illustrator, Protopie",
+        "Interactive Design Principle Cards: 'Emotion First', 'Zero Friction', 'Contrast as Rhythm'"
+      ]
+    },
+    {
+      "id": "contact_section",
+      "name": "Contact CTA & Editorial Footer",
+      "description": "Bold red poster block contact section with interactive email copy action, quick contact form, and social links.",
+      "key_elements": [
+        "Red Detonation Block: Full-width signal red block (#FF2A2A) with white typography",
+        "Interactive Email Copy Button: 'noelvincentramli@gmail.com' with one-click copy and toast notification",
+        "Interactive Contact Form: Name, Email, Project Type, Message input with data-testid attributes",
+        "Social Links: LinkedIn, Dribbble, Behance, GitHub, Instagram",
+        "Footer Marquee: Kinetic sliding text 'NOEL VINCENT RAMLI © 2026 — ALL RIGHTS RESERVED'"
+      ]
+    }
+  ],
+  "image_urls": {
+    "hero_portrait": "https://images.unsplash.com/photo-1557187161-5acc17e3a418?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMzJ8MHwxfHNlYXJjaHwxfHx5b3VuZyUyMG1hbGUlMjBjcmVhdGl2ZSUyMGRlc2lnbmVyJTIwcG9ydHJhaXQlMjBzdHVkaW8lMjBlZGl0b3JpYWx8ZW58MHx8fHwxNzkwMjQ5MTk5fDA&ixlib=rb-4.1.0&q=85",
+    "about_portrait": "https://images.unsplash.com/photo-1485014749802-1dba3a03984c?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMzJ8MHwxfHNlYXJjaHw0fHx5b3VuZyUyMG1hbGUlMjBjcmVhdGl2ZSUyMGRlc2lnbmVyJTIwcG9ydHJhaXQlMjBzdHVkaW8lMjBlZGl0b3JpYWx8ZW58MHx8fHwxNzkwMjQ5MTk5fDA&ixlib=rb-4.1.0&q=85",
+    "project_mockup_1": "https://images.unsplash.com/photo-1697292859724-0d2501966448?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA3MDB8MHwxfHNlYXJjaHszfHx1aSUyMHV4JTIwbW9iaWxlJTIwYXBwJTIwZGVzaWduJTIwcHJlc2VudGF0aW9uJTIwZGFyayUyMG1vY2t1cHxlbnwwfHx8fDE3OTAyNDkyMDV8MA&ixlib=rb-4.1.0&q=85",
+    "project_mockup_2": "https://images.unsplash.com/photo-1601784551446-20c9e07cdbdb?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA3MDB8MHwxfHNlYXJjaHxfHx1aSUyMHV4JTIwbW9iaWxlJTIwYXBwJTIwZGVzaWduJTIwcHJlc2VudGF0aW9uJTIwZGFyayUyMG1vY2t1cHxlbnwwfHx8fDE3OTAyNDkyMDV8MA&ixlib=rb-4.1.0&q=85",
+    "project_mockup_3": "https://images.pexels.com/photos/6638409/pexels-photo-6638409.png?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "project_mockup_4": "https://images.unsplash.com/photo-1644329968124-4c68f17c21e3?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA3MDB8MHwxfHNlYXJjaHw0fHx1aSUyMHV4JTIwbW9iaWxlJTIwYXBwJTIwZGVzaWduJTIwcHJlc2VudGF0aW9uJTIwZGFyayUyMG1vY2t1cHxlbnwwfHx8fDE3OTAyNDkyMDV8MA&ixlib=rb-4.1.0&q=85",
+    "experiment_poster_1": "https://images.unsplash.com/photo-1669909625629-c341fa2d2822?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzNDR8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMHR5cG9ncmFwaHklMjBwb3N0ZXIlMjBkYXJrJTIwZGVzaWduJTIwZ3JhcGhpY3xlbnwwfHx8fDE3OTAyNDkyMDV8MA&ixlib=rb-4.1.0&q=85",
+    "experiment_poster_2": "https://images.unsplash.com/photo-1765445665873-b8dc9a67b66c?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzNDR8MHwxfHNlYXJjaHwyfHxhYnN0cmFjdCUyMHR5cG9ncmFwaHklMjBwb3N0ZXIlMjBkYXJrJTIwZGVzaWduJTIwZ3JhcGhpY3xlbnwwfHx8fDE3OTAyNDkyMDV8MA&ixlib=rb-4.1.0&q=85",
+    "experiment_poster_3": "https://images.pexels.com/photos/3241106/pexels-photo-3241106.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+  },
+  "testing_attributes": {
+    "pacman_skip_button": "data-testid='skip-intro-button'",
+    "nav_contact_button": "data-testid='nav-contact-button'",
+    "hero_projects_cta": "data-testid='hero-projects-cta'",
+    "hero_cv_cta": "data-testid='hero-cv-cta'",
+    "project_filter_all": "data-testid='project-filter-all'",
+    "project_filter_uiux": "data-testid='project-filter-uiux'",
+    "project_card_prefix": "data-testid='project-card-{id}'",
+    "project_modal": "data-testid='project-modal'",
+    "contact_form_name": "data-testid='contact-form-name'",
+    "contact_form_email": "data-testid='contact-form-email'",
+    "contact_form_message": "data-testid='contact-form-message'",
+    "contact_form_submit": "data-testid='contact-form-submit-button'",
+    "copy_email_button": "data-testid='copy-email-button'"
+  },
+  "UNIVERSAL_GUIDELINES_FOR_MAIN_AGENT": [
+    "Strictly avoid AI slop, default Vercel white card layouts, or centered generic templates.",
+    "Ensure dark obsidian aesthetic with pure white high-impact text and signal red accents (#FF2A2A).",
+    "Every interactive element MUST have hover/focus transitions and a role-based data-testid attribute.",
+    "Pac-Man intro loading screen MUST be functional, entertaining, and include a clear working Skip button.",
+    "All modals, form fields, and copy-email buttons must work with instant UI feedback via Sonner toast notifications.",
+    "Containers with borders must have internal padding (p-6 or p-8) to prevent text collision."
+  ]
+}
