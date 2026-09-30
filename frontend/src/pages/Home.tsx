@@ -41,7 +41,7 @@ interface Project {
 interface BrandLogo {
   bg: string;
   accent: string;
-  icon: "heart" | "star";
+  icon?: "heart" | "star";
   bold: string;
   light: string;
   caption: string;
@@ -241,7 +241,7 @@ const projects: Project[] = [
     metric: "RISET & DESAIN UX / 04",
     image: "/projects/boskaf/cover.jpg",
     color: "#231709",
-    logo: { bg: "#231709", accent: "#c49a6c", icon: "star", bold: "BOSKAF", light: "Roasters", caption: "SELF-ORDER / 2026" },
+    logo: { bg: "#231709", accent: "#c49a6c", bold: "BOSKAF", light: "Roasters", caption: "SELF-ORDER / 2026" },
     caseStudy: {
       role: "UI/UX Designer",
       team: "Boskaf Experience Team",
@@ -344,12 +344,13 @@ function PacmanIntro({ onComplete }: { onComplete: () => void }) {
 }
 
 function BrandLogoCover({ slug, title, logo, compact = false, scope }: { slug: string; title: string; logo: BrandLogo; compact?: boolean; scope: "card" | "detail" }) {
-  const Icon = logo.icon === "star" ? Star : Heart;
+  const Icon = logo.icon === "star" ? Star : logo.icon === "heart" ? Heart : null;
   return (
     <div className={`relative flex items-center justify-center overflow-hidden ${compact ? "h-full w-full" : "min-h-56 sm:min-h-72"}`} style={{ backgroundColor: logo.bg }} data-testid={`${slug}-logo-cover-${scope}`} aria-label={`Logo ${title}`}>
-      <div className={`relative flex items-center justify-center rounded-full ${compact ? "h-24 w-24" : "h-44 w-44 sm:h-52 sm:w-52"}`} style={{ backgroundColor: logo.accent, color: logo.bg, boxShadow: `0 0 0 10px ${logo.accent}1a` }}>
-        <Icon className={`absolute ${compact ? "top-6" : "top-12"}`} style={{ fill: logo.bg }} size={compact ? 20 : 32} strokeWidth={1.5} data-testid={`${slug}-logo-icon-${scope}`} />
-        <span className={`font-heading font-black tracking-[-0.08em] ${compact ? "mt-10 text-base" : "mt-16 text-2xl"}`} data-testid={`${slug}-logo-wordmark-${scope}`}>{logo.bold} <span className="font-normal">{logo.light}</span></span>
+      <div className={`relative flex flex-col items-center justify-center rounded-full ${compact ? "h-24 w-24 gap-1" : "h-44 w-44 gap-2 sm:h-52 sm:w-52"}`} style={{ backgroundColor: logo.accent, color: logo.bg, boxShadow: `0 0 0 10px ${logo.accent}1a` }}>
+        {Icon && <Icon style={{ fill: logo.bg }} size={compact ? 16 : 28} strokeWidth={1.5} data-testid={`${slug}-logo-icon-${scope}`} />}
+        <span className={`text-center font-heading font-black leading-none tracking-[-0.04em] ${compact ? "text-xs" : "text-2xl"}`} data-testid={`${slug}-logo-wordmark-${scope}`}>{logo.bold}</span>
+        <span className={`text-center font-heading leading-none ${compact ? "text-[9px]" : "text-base"}`}>{logo.light}</span>
       </div>
       <span className={`absolute font-mono uppercase tracking-[0.2em] opacity-60 ${compact ? "bottom-3 left-3 text-[8px]" : "bottom-4 left-4 text-[9px]"}`} style={{ color: logo.accent }} data-testid={`${slug}-logo-caption-${scope}`}>{logo.caption}</span>
     </div>
@@ -522,7 +523,7 @@ export default function Home() {
 
         <section className="border-y border-white/10 bg-[#111112]" data-testid="stats-strip">
           <div className="mx-auto grid max-w-[1440px] grid-cols-2 divide-x divide-white/10 sm:grid-cols-4">
-            {[['15+', 'Projects built'], ['04', 'Years in design'], ['03', 'Creative modes'], ['∞', 'Curiosity']].map(([value, label], index) => <div key={label} className="p-6 sm:p-8" data-testid={`stat-${index + 1}`}><p className="font-heading text-4xl font-black tracking-[-0.06em]" data-testid={`stat-${index + 1}-value`}>{value}</p><p className="mt-2 font-mono text-[9px] uppercase tracking-[0.18em] text-white/40" data-testid={`stat-${index + 1}-label`}>{label}</p></div>)}
+            {[["10", "Projects built"], ["04", "Years in design"], ["03", "Creative modes"], ["∞", "Curiosity"]].map(([value, label], index) => <div key={label} className="p-6 sm:p-8" data-testid={`stat-${index + 1}`}><p className="font-heading text-4xl font-black tracking-[-0.06em]" data-testid={`stat-${index + 1}-value`}>{value}</p><p className="mt-2 font-mono text-[9px] uppercase tracking-[0.18em] text-white/40" data-testid={`stat-${index + 1}-label`}>{label}</p></div>)}
           </div>
         </section>
 
@@ -547,7 +548,38 @@ export default function Home() {
         </section>
 
         <section id="about" className="mx-auto max-w-[1440px] px-5 py-24 sm:px-8 lg:px-12 lg:py-32" data-testid="about-section">
-          <div className="grid gap-14 lg:grid-cols-[0.7fr_1fr] lg:gap-24"><div><p className="mb-4 font-mono text-[10px] uppercase tracking-[0.28em] text-[#ff2a2a]" data-testid="about-kicker">04 / About Noel</p><div className="relative max-w-sm"><img src={personalImages.studio} alt="Noel Vincent Ramli working at a desk" className="aspect-[0.8] w-full object-cover grayscale contrast-125" data-testid="about-image" /><div className="absolute -bottom-4 -right-4 bg-[#ffe600] p-4 font-mono text-[9px] uppercase leading-5 tracking-[0.15em] text-black" data-testid="about-note">Design is<br />a team sport.</div></div></div><div><h2 className="max-w-3xl font-heading text-5xl font-black uppercase leading-[0.84] tracking-[-0.08em] sm:text-7xl" data-testid="about-title">I turn<br /><span className="text-[#ff2a2a]">curiosity</span><br />into form.</h2><p className="mt-9 max-w-2xl text-base leading-8 text-white/60" data-testid="about-description">I&apos;m Noel, a UI/UX designer who likes connecting the dots between a useful interface and a memorable feeling. My practice moves between product thinking, visual direction, and small experiments that make the internet feel a little more alive.</p><div className="mt-12 grid gap-8 border-t border-white/15 pt-8 sm:grid-cols-2"><div><p className="mb-4 font-mono text-[10px] uppercase tracking-[0.22em] text-white/35" data-testid="toolbox-label">Toolbox / currently</p><p className="text-sm leading-8 text-white/70" data-testid="toolbox-list">Figma · Framer · React<br />Prototyping · Art direction<br />Systems thinking · Storytelling</p></div><div><p className="mb-4 font-mono text-[10px] uppercase tracking-[0.22em] text-white/35" data-testid="principles-label">Three working principles</p><p className="text-sm leading-8 text-white/70" data-testid="principles-list">01 — Emotion first<br />02 — Zero friction<br />03 — Contrast as rhythm</p></div></div></div></div>
+          <div className="grid gap-14 lg:grid-cols-[0.7fr_1fr] lg:gap-24">
+            <div>
+              <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.28em] text-[#ff2a2a]" data-testid="about-kicker">04 / About Noel</p>
+              <div className="relative max-w-sm">
+                <img src={personalImages.studio} alt="Noel Vincent Ramli working at a desk" className="aspect-[0.8] w-full object-cover grayscale contrast-125" data-testid="about-image" />
+                <div className="absolute -bottom-4 -right-4 bg-[#ffe600] p-4 font-mono text-[9px] uppercase leading-5 tracking-[0.15em] text-black" data-testid="about-note">Design is<br />a team sport.</div>
+              </div>
+            </div>
+            <div>
+              <h2 className="max-w-3xl font-heading text-5xl font-black uppercase leading-[0.84] tracking-[-0.08em] sm:text-7xl" data-testid="about-title">I turn<br /><span className="text-[#ff2a2a]">curiosity</span><br />into form.</h2>
+              <p className="mt-9 max-w-2xl text-base leading-8 text-white/60" data-testid="about-description">I&apos;m Noel, a UI/UX designer who likes connecting the dots between a useful interface and a memorable feeling. My practice moves between product thinking, visual direction, and small experiments that make the internet feel a little more alive.</p>
+              <div className="mt-12 grid gap-8 border-t border-white/15 pt-8 sm:grid-cols-2">
+                <div>
+                  <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.22em] text-white/35" data-testid="toolbox-label">Toolbox / currently</p>
+                  <div className="space-y-3 text-sm leading-6 text-white/70" data-testid="toolbox-list">
+                    <p><span className="mb-1 block font-mono text-[9px] uppercase tracking-[0.16em] text-white/35">Design &amp; UI</span>Figma · Framer · Canva</p>
+                    <p><span className="mb-1 block font-mono text-[9px] uppercase tracking-[0.16em] text-white/35">AI Models &amp; LLMs</span>ChatGPT · Gemini · Claude</p>
+                    <p><span className="mb-1 block font-mono text-[9px] uppercase tracking-[0.16em] text-white/35">AI Builders &amp; Dev</span>Lovable · Emergent · Antigravity</p>
+                  </div>
+                </div>
+                <div>
+                  <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.22em] text-white/35" data-testid="principles-label">Skills &amp; principles</p>
+                  <div className="space-y-3 text-sm leading-6 text-white/70" data-testid="principles-list">
+                    <p><span className="mb-1 block font-mono text-[9px] uppercase tracking-[0.16em] text-white/35">Core Skills</span>Prototyping · Art Direction · Storytelling</p>
+                    <p><span className="mb-1 block font-mono text-[9px] uppercase tracking-[0.16em] text-white/35">AI &amp; Engineering</span>Prompt Engineering · Generative AI</p>
+                    <p><span className="mb-1 block font-mono text-[9px] uppercase tracking-[0.16em] text-white/35">Mindset &amp; Ethics</span>Systems Thinking · Critical Thinking in AI · Ethical AI Usage</p>
+                    <p><span className="mb-1 block font-mono text-[9px] uppercase tracking-[0.16em] text-white/35">Design Principles</span>Emotion First · Zero Friction · Contrast as Rhythm</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </section>
 
         <section id="contact" className="bg-[#ff2a2a] text-white" data-testid="contact-section"><div className="mx-auto max-w-[1440px] px-5 py-20 sm:px-8 lg:px-12 lg:py-28"><div className="grid gap-14 lg:grid-cols-[1fr_0.55fr] lg:items-end"><div><p className="mb-8 font-mono text-[10px] uppercase tracking-[0.28em] text-white/70" data-testid="contact-kicker">05 / Open channel</p><h2 className="max-w-4xl font-heading text-6xl font-black uppercase leading-[0.8] tracking-[-0.09em] sm:text-8xl" data-testid="contact-title">Have a<br />good one?</h2><p className="mt-8 max-w-md text-sm leading-6 text-white/75" data-testid="contact-description">A product to shape, a visual world to build, or a strange idea that needs a partner? Start with a hello.</p><div className="mt-8 flex flex-wrap gap-3" data-testid="contact-channels"><button className="inline-flex items-center gap-3 border border-white px-4 py-3 font-mono text-[10px] uppercase tracking-[0.16em] transition hover:bg-white hover:text-[#ff2a2a]" onClick={copyEmail} data-testid="copy-email-button">{copied ? <Check size={14} /> : <Copy size={14} />} {contact.email}</button>{contact.links.map((link) => <a key={link.id} href={link.href} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 border border-white/50 px-4 py-3 font-mono text-[10px] uppercase tracking-[0.16em] transition hover:border-white hover:bg-white hover:text-[#ff2a2a]" data-testid={`contact-link-${link.id}`}><span className="text-white/60" data-testid={`contact-link-${link.id}-label`}>{link.label}</span><span data-testid={`contact-link-${link.id}-handle`}>{link.handle}</span><ArrowUpRight size={13} /></a>)}</div></div><form className="border border-white/35 p-5 sm:p-7" onSubmit={submitForm} data-testid="contact-form"><p className="mb-7 font-mono text-[10px] uppercase tracking-[0.2em] text-white/65" data-testid="contact-form-label">Or send a short brief</p><label className="mb-5 block" data-testid="contact-form-name-label"><span className="mb-2 block font-mono text-[9px] uppercase tracking-[0.18em] text-white/65">Your name</span><input required value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} className="w-full border-b border-white/45 bg-transparent py-2 text-sm outline-none placeholder:text-white/40 focus:border-white" placeholder="Noel&apos;s future collaborator" data-testid="contact-form-name" /></label><label className="mb-5 block" data-testid="contact-form-email-label"><span className="mb-2 block font-mono text-[9px] uppercase tracking-[0.18em] text-white/65">Email</span><input required type="email" value={form.email} onChange={(event) => setForm({ ...form, email: event.target.value })} className="w-full border-b border-white/45 bg-transparent py-2 text-sm outline-none placeholder:text-white/40 focus:border-white" placeholder="you@somewhere.com" data-testid="contact-form-email" /></label><label className="mb-5 block" data-testid="contact-form-message-label"><span className="mb-2 block font-mono text-[9px] uppercase tracking-[0.18em] text-white/65">The idea</span><textarea required value={form.message} onChange={(event) => setForm({ ...form, message: event.target.value })} className="min-h-20 w-full resize-none border-b border-white/45 bg-transparent py-2 text-sm outline-none placeholder:text-white/40 focus:border-white" placeholder="Tell me the good part..." data-testid="contact-form-message" /></label><button type="submit" className="mt-2 flex w-full items-center justify-between bg-white px-4 py-3 font-mono text-[10px] uppercase tracking-[0.18em] text-[#ff2a2a] transition hover:bg-black hover:text-white" data-testid="contact-form-submit-button"><span>{submitted ? "Brief received" : "Send the brief"}</span><ArrowUpRight size={15} /></button></form></div></div><div className="border-t border-white/25 px-5 py-5 sm:px-8 lg:px-12"><div className="mx-auto flex max-w-[1440px] flex-col justify-between gap-4 font-mono text-[9px] uppercase tracking-[0.18em] text-white/60 sm:flex-row" data-testid="site-footer"><span data-testid="footer-copyright">Noel Vincent Ramli © 2026</span><span data-testid="footer-location">Based in Indonesia / Available worldwide</span><span data-testid="footer-credit">Built with intent + a little chaos</span></div></div></section>
