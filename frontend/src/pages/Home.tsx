@@ -462,7 +462,8 @@ export default function Home() {
   const [zoomedScreen, setZoomedScreen] = useState<Screen | null>(null);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [copied, setCopied] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [formStatus, setFormStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [formStatusMessage, setFormStatusMessage] = useState("");
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const visibleProjects = useMemo(() => category === "All" ? projects : projects.filter((project) => project.category === category), [category]);
 
@@ -477,10 +478,37 @@ export default function Home() {
     toast.success("Email copied — let’s make something memorable.");
     window.setTimeout(() => setCopied(false), 1800);
   };
-  const submitForm = (event: FormEvent<HTMLFormElement>) => {
+  const submitForm = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setSubmitted(true);
-    toast.success("Message staged. Noel will be in touch soon.");
+    setFormStatus("loading");
+    setFormStatusMessage("");
+
+    const payload = new FormData();
+    payload.append("access_key", "301e1284-351a-47a7-8a29-bcdc985d24ff");
+    payload.append("name", form.name);
+    payload.append("email", form.email);
+    payload.append("message", form.message);
+
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { Accept: "application/json" },
+        body: payload,
+      });
+      const result = await response.json() as { success?: boolean };
+
+      if (!response.ok || !result.success) {
+        throw new Error("Web3Forms submission failed");
+      }
+
+      setFormStatus("success");
+      setFormStatusMessage("Brief received. Noel will be in touch soon.");
+      toast.success("Your brief has been sent.");
+    } catch {
+      setFormStatus("error");
+      setFormStatusMessage("Could not send your brief. Please try again.");
+      toast.error("Could not send your brief. Please try again.");
+    }
   };
 
   return (
@@ -582,7 +610,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="contact" className="bg-[#ff2a2a] text-white" data-testid="contact-section"><div className="mx-auto max-w-[1440px] px-5 py-20 sm:px-8 lg:px-12 lg:py-28"><div className="grid gap-14 lg:grid-cols-[1fr_0.55fr] lg:items-end"><div><p className="mb-8 font-mono text-[10px] uppercase tracking-[0.28em] text-white/70" data-testid="contact-kicker">05 / Open channel</p><h2 className="max-w-4xl font-heading text-6xl font-black uppercase leading-[0.8] tracking-[-0.09em] sm:text-8xl" data-testid="contact-title">Have a<br />good one?</h2><p className="mt-8 max-w-md text-sm leading-6 text-white/75" data-testid="contact-description">A product to shape, a visual world to build, or a strange idea that needs a partner? Start with a hello.</p><div className="mt-8 flex flex-wrap gap-3" data-testid="contact-channels"><button className="inline-flex items-center gap-3 border border-white px-4 py-3 font-mono text-[10px] uppercase tracking-[0.16em] transition hover:bg-white hover:text-[#ff2a2a]" onClick={copyEmail} data-testid="copy-email-button">{copied ? <Check size={14} /> : <Copy size={14} />} {contact.email}</button>{contact.links.map((link) => <a key={link.id} href={link.href} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 border border-white/50 px-4 py-3 font-mono text-[10px] uppercase tracking-[0.16em] transition hover:border-white hover:bg-white hover:text-[#ff2a2a]" data-testid={`contact-link-${link.id}`}><span className="text-white/60" data-testid={`contact-link-${link.id}-label`}>{link.label}</span><span data-testid={`contact-link-${link.id}-handle`}>{link.handle}</span><ArrowUpRight size={13} /></a>)}</div></div><form className="border border-white/35 p-5 sm:p-7" onSubmit={submitForm} data-testid="contact-form"><p className="mb-7 font-mono text-[10px] uppercase tracking-[0.2em] text-white/65" data-testid="contact-form-label">Or send a short brief</p><label className="mb-5 block" data-testid="contact-form-name-label"><span className="mb-2 block font-mono text-[9px] uppercase tracking-[0.18em] text-white/65">Your name</span><input required value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} className="w-full border-b border-white/45 bg-transparent py-2 text-sm outline-none placeholder:text-white/40 focus:border-white" placeholder="Noel&apos;s future collaborator" data-testid="contact-form-name" /></label><label className="mb-5 block" data-testid="contact-form-email-label"><span className="mb-2 block font-mono text-[9px] uppercase tracking-[0.18em] text-white/65">Email</span><input required type="email" value={form.email} onChange={(event) => setForm({ ...form, email: event.target.value })} className="w-full border-b border-white/45 bg-transparent py-2 text-sm outline-none placeholder:text-white/40 focus:border-white" placeholder="you@somewhere.com" data-testid="contact-form-email" /></label><label className="mb-5 block" data-testid="contact-form-message-label"><span className="mb-2 block font-mono text-[9px] uppercase tracking-[0.18em] text-white/65">The idea</span><textarea required value={form.message} onChange={(event) => setForm({ ...form, message: event.target.value })} className="min-h-20 w-full resize-none border-b border-white/45 bg-transparent py-2 text-sm outline-none placeholder:text-white/40 focus:border-white" placeholder="Tell me the good part..." data-testid="contact-form-message" /></label><button type="submit" className="mt-2 flex w-full items-center justify-between bg-white px-4 py-3 font-mono text-[10px] uppercase tracking-[0.18em] text-[#ff2a2a] transition hover:bg-black hover:text-white" data-testid="contact-form-submit-button"><span>{submitted ? "Brief received" : "Send the brief"}</span><ArrowUpRight size={15} /></button></form></div></div><div className="border-t border-white/25 px-5 py-5 sm:px-8 lg:px-12"><div className="mx-auto flex max-w-[1440px] flex-col justify-between gap-4 font-mono text-[9px] uppercase tracking-[0.18em] text-white/60 sm:flex-row" data-testid="site-footer"><span data-testid="footer-copyright">Noel Vincent Ramli © 2026</span><span data-testid="footer-location">Based in Indonesia / Available worldwide</span><span data-testid="footer-credit">Built with intent + a little chaos</span></div></div></section>
+        <section id="contact" className="bg-[#ff2a2a] text-white" data-testid="contact-section"><div className="mx-auto max-w-[1440px] px-5 py-20 sm:px-8 lg:px-12 lg:py-28"><div className="grid gap-14 lg:grid-cols-[1fr_0.55fr] lg:items-end"><div><p className="mb-8 font-mono text-[10px] uppercase tracking-[0.28em] text-white/70" data-testid="contact-kicker">05 / Open channel</p><h2 className="max-w-4xl font-heading text-6xl font-black uppercase leading-[0.8] tracking-[-0.09em] sm:text-8xl" data-testid="contact-title">Have a<br />good one?</h2><p className="mt-8 max-w-md text-sm leading-6 text-white/75" data-testid="contact-description">A product to shape, a visual world to build, or a strange idea that needs a partner? Start with a hello.</p><div className="mt-8 flex flex-wrap gap-3" data-testid="contact-channels"><button className="inline-flex items-center gap-3 border border-white px-4 py-3 font-mono text-[10px] uppercase tracking-[0.16em] transition hover:bg-white hover:text-[#ff2a2a]" onClick={copyEmail} data-testid="copy-email-button">{copied ? <Check size={14} /> : <Copy size={14} />} {contact.email}</button>{contact.links.map((link) => <a key={link.id} href={link.href} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 border border-white/50 px-4 py-3 font-mono text-[10px] uppercase tracking-[0.16em] transition hover:border-white hover:bg-white hover:text-[#ff2a2a]" data-testid={`contact-link-${link.id}`}><span className="text-white/60" data-testid={`contact-link-${link.id}-label`}>{link.label}</span><span data-testid={`contact-link-${link.id}-handle`}>{link.handle}</span><ArrowUpRight size={13} /></a>)}</div></div><form className="border border-white/35 p-5 sm:p-7" onSubmit={submitForm} data-testid="contact-form"><p className="mb-7 font-mono text-[10px] uppercase tracking-[0.2em] text-white/65" data-testid="contact-form-label">Or send a short brief</p><label className="mb-5 block" data-testid="contact-form-name-label"><span className="mb-2 block font-mono text-[9px] uppercase tracking-[0.18em] text-white/65">Your name</span><input required value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} className="w-full border-b border-white/45 bg-transparent py-2 text-sm outline-none placeholder:text-white/40 focus:border-white" placeholder="Noel&apos;s future collaborator" data-testid="contact-form-name" /></label><label className="mb-5 block" data-testid="contact-form-email-label"><span className="mb-2 block font-mono text-[9px] uppercase tracking-[0.18em] text-white/65">Email</span><input required type="email" value={form.email} onChange={(event) => setForm({ ...form, email: event.target.value })} className="w-full border-b border-white/45 bg-transparent py-2 text-sm outline-none placeholder:text-white/40 focus:border-white" placeholder="you@somewhere.com" data-testid="contact-form-email" /></label><label className="mb-5 block" data-testid="contact-form-message-label"><span className="mb-2 block font-mono text-[9px] uppercase tracking-[0.18em] text-white/65">The idea</span><textarea required value={form.message} onChange={(event) => setForm({ ...form, message: event.target.value })} className="min-h-20 w-full resize-none border-b border-white/45 bg-transparent py-2 text-sm outline-none placeholder:text-white/40 focus:border-white" placeholder="Tell me the good part..." data-testid="contact-form-message" /></label>{formStatus === "idle" || formStatus === "loading" ? <button type="submit" disabled={formStatus === "loading"} className="mt-2 flex w-full items-center justify-between bg-white px-4 py-3 font-mono text-[10px] uppercase tracking-[0.18em] text-[#ff2a2a] transition hover:bg-black hover:text-white disabled:cursor-wait disabled:opacity-70" data-testid="contact-form-submit-button"><span>{formStatus === "loading" ? "Sending..." : "Send the brief"}</span>{formStatus === "loading" ? null : <ArrowUpRight size={15} />}</button> : <p role="status" aria-live="polite" className={`mt-2 border border-white/50 px-4 py-3 text-sm ${formStatus === "success" ? "bg-white text-[#ff2a2a]" : "bg-black text-white"}`} data-testid={`contact-form-${formStatus}`}>{formStatusMessage}</p>}</form></div></div><div className="border-t border-white/25 px-5 py-5 sm:px-8 lg:px-12"><div className="mx-auto flex max-w-[1440px] flex-col justify-between gap-4 font-mono text-[9px] uppercase tracking-[0.18em] text-white/60 sm:flex-row" data-testid="site-footer"><span data-testid="footer-copyright">Noel Vincent Ramli © 2026</span><span data-testid="footer-location">Based in Indonesia / Available worldwide</span><span data-testid="footer-credit">Built with intent + a little chaos</span></div></div></section>
       </main>
     </div>
   );
