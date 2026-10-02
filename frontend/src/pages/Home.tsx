@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { FormEvent } from "react";
-import { ArrowDownRight, ArrowUpRight, Check, Copy, Download, Heart, Menu, Star, X } from "lucide-react";
+import { ArrowDownRight, ArrowUpRight, Check, Copy, Download, Eye, Heart, Menu, Star, X } from "lucide-react";
 import { toast } from "sonner";
 
 const personalImages = {
@@ -20,6 +20,8 @@ const contact = {
     { label: "LinkedIn", handle: "noel-vincent-ramli", href: "https://www.linkedin.com/in/noel-vincent-ramli-8b71963b3", id: "linkedin" },
   ],
 };
+
+const cvFile = "/CV_Noel_Vincent_Ramli.pdf";
 
 type ProjectCategory = "All" | "UI/UX" | "Visual";
 
@@ -303,6 +305,7 @@ const navItems = [
   { label: "Projects", href: "#projects", testId: "nav-projects-link" },
   { label: "Experiments", href: "#experiments", testId: "nav-experiments-link" },
   { label: "About", href: "#about", testId: "nav-about-link" },
+  { label: "CV", href: "#cv", testId: "nav-cv-link" },
 ];
 
 function PacmanIntro({ onComplete }: { onComplete: () => void }) {
@@ -379,6 +382,71 @@ function ScreenLightbox({ screen, onClose }: { screen: Screen; onClose: () => vo
     <div className="fixed inset-0 z-50 flex flex-col bg-black/95 p-4 sm:p-8" role="dialog" aria-modal="true" aria-label={screen.label} onClick={onClose} data-testid="screen-lightbox">
       <div className="flex items-center justify-between"><span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/70" data-testid="screen-lightbox-label">{screen.label}</span><button className="border border-white/20 p-2 text-white/70 transition hover:border-[#ff2a2a] hover:text-white" onClick={onClose} aria-label="Tutup gambar" data-testid="screen-lightbox-close-button"><X size={18} /></button></div>
       <img src={screen.image} alt={screen.label} className="mt-4 min-h-0 flex-1 w-full object-contain" style={{ backgroundColor: screen.bg ?? "#ffffff" }} onClick={(event) => event.stopPropagation()} data-testid="screen-lightbox-image" />
+    </div>
+  );
+}
+
+function CVPreviewModal({ onClose }: { onClose: () => void }) {
+  const dialogRef = useRef<HTMLElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+
+  useEffect(() => {
+    const previousOverflow = document.body.style.overflow;
+    const previouslyFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    document.body.style.overflow = "hidden";
+    closeButtonRef.current?.focus();
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        onClose();
+        return;
+      }
+
+      if (event.key === "Tab") {
+        const focusable = dialogRef.current?.querySelectorAll<HTMLElement>("a[href], button:not([disabled]), iframe, [tabindex]:not([tabindex='-1'])");
+        if (!focusable?.length) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
+    };
+
+    const frame = iframeRef.current;
+    const attachFrameKeydown = () => frame?.contentWindow?.addEventListener("keydown", onKeyDown, true);
+    frame?.addEventListener("load", attachFrameKeydown);
+    attachFrameKeydown();
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      frame?.removeEventListener("load", attachFrameKeydown);
+      frame?.contentWindow?.removeEventListener("keydown", onKeyDown, true);
+      window.removeEventListener("keydown", onKeyDown);
+      previouslyFocused?.focus();
+    };
+  }, [onClose]);
+
+  return (
+    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/85 p-3 backdrop-blur-sm animate-in fade-in-0 duration-200 sm:p-6" onClick={(event) => { if (event.target === event.currentTarget) onClose(); }} data-testid="cv-preview-overlay">
+      <section ref={dialogRef} className="flex max-h-[90vh] w-full max-w-5xl animate-in fade-in-0 zoom-in-95 flex-col overflow-hidden border border-white/20 bg-[#111112] duration-200" role="dialog" aria-modal="true" aria-label="CV Noel Vincent Ramli" onBlurCapture={(event) => { const nextTarget = event.relatedTarget; if (!(nextTarget instanceof Node) || !event.currentTarget.contains(nextTarget)) closeButtonRef.current?.focus(); }} data-testid="cv-preview-modal">
+        <header className="flex flex-wrap items-center justify-between gap-3 border-b border-white/15 px-4 py-3 sm:px-6">
+          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/70" data-testid="cv-preview-label">CV / Noel Vincent Ramli</p>
+          <div className="flex flex-wrap items-center gap-2">
+            <a href={cvFile} download="CV_Noel_Vincent_Ramli.pdf" className="inline-flex items-center gap-2 bg-[#ff2a2a] px-3 py-2 font-mono text-[9px] uppercase tracking-[0.14em] text-white transition hover:bg-white hover:text-[#ff2a2a]" data-testid="cv-preview-download"><Download size={13} />Download CV</a>
+            <a href={cvFile} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 border border-white/30 px-3 py-2 font-mono text-[9px] uppercase tracking-[0.14em] text-white/75 transition hover:border-[#ff2a2a] hover:text-[#ff2a2a]" data-testid="cv-preview-new-tab">Open in new tab <ArrowUpRight size={13} /></a>
+            <button ref={closeButtonRef} type="button" className="border border-white/20 p-2 text-white/70 transition hover:border-[#ff2a2a] hover:text-white" onClick={onClose} aria-label="Close CV preview" data-testid="cv-preview-close"><X size={16} /></button>
+          </div>
+        </header>
+        <iframe ref={iframeRef} src={cvFile} title="CV Noel Vincent Ramli PDF preview" className="min-h-0 w-full flex-1 bg-white" style={{ height: "78vh" }} data-testid="cv-preview-frame" />
+      </section>
     </div>
   );
 }
@@ -462,12 +530,22 @@ export default function Home() {
   const [zoomedScreen, setZoomedScreen] = useState<Screen | null>(null);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [copied, setCopied] = useState(false);
+  const [cvOpen, setCvOpen] = useState(false);
   const [formStatus, setFormStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [formStatusMessage, setFormStatusMessage] = useState("");
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const visibleProjects = useMemo(() => category === "All" ? projects : projects.filter((project) => project.category === category), [category]);
 
   const finishIntro = () => setShowIntro(false);
+  const openCv = () => {
+    const shouldOpenInNewTab = window.matchMedia("(max-width: 767px), (pointer: coarse)").matches;
+    if (shouldOpenInNewTab) {
+      window.open(cvFile, "_blank", "noopener,noreferrer");
+    } else {
+      setCvOpen(true);
+    }
+    setMobileOpen(false);
+  };
   const scrollTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
     setMobileOpen(false);
@@ -517,17 +595,18 @@ export default function Home() {
       {previewProject && <ProjectQuickPreview project={previewProject} onClose={() => setPreviewProject(null)} onContinue={() => { setPreviewProject(null); setSelectedProject(previewProject); }} onZoom={setZoomedScreen} />}
       {selectedProject && <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} onZoom={setZoomedScreen} />}
       {zoomedScreen && <ScreenLightbox screen={zoomedScreen} onClose={() => setZoomedScreen(null)} />}
+      {cvOpen && <CVPreviewModal onClose={() => setCvOpen(false)} />}
 
       <header className="sticky top-0 z-30 border-b border-white/10 bg-[#080808]/85 backdrop-blur-xl" data-testid="site-header">
         <div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between px-5 sm:px-8 lg:px-12">
           <button className="group flex items-center gap-2 font-heading text-lg font-black tracking-[-0.06em]" onClick={() => scrollTo("top")} data-testid="brand-home-button"><span className="h-2 w-2 rounded-full bg-[#ff2a2a] transition-transform group-hover:scale-150" />NVR / 01</button>
           <nav className="hidden items-center gap-8 md:flex" aria-label="Main navigation" data-testid="desktop-navigation">
-            {navItems.map((item) => <a key={item.label} href={item.href} className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/55 transition-colors hover:text-[#ff2a2a]" data-testid={item.testId}>{item.label}</a>)}
+            {navItems.map((item) => <a key={item.label} href={item.href} onClick={(event) => { if (item.label === "CV") { event.preventDefault(); openCv(); } }} className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/55 transition-colors hover:text-[#ff2a2a]" data-testid={item.testId}>{item.label}</a>)}
           </nav>
           <button className="hidden border border-[#ff2a2a] px-4 py-2 font-mono text-[10px] uppercase tracking-[0.2em] text-[#ff2a2a] transition hover:bg-[#ff2a2a] hover:text-white md:block" onClick={() => scrollTo("contact")} data-testid="nav-contact-button">Let&apos;s talk <ArrowUpRight className="ml-1 inline" size={13} /></button>
           <button className="p-2 md:hidden" onClick={() => setMobileOpen((open) => !open)} aria-label="Toggle navigation" data-testid="mobile-menu-button">{mobileOpen ? <X /> : <Menu />}</button>
         </div>
-        {mobileOpen && <nav className="border-t border-white/10 px-5 py-5 md:hidden" data-testid="mobile-navigation">{navItems.map((item) => <a key={item.label} href={item.href} className="block border-b border-white/10 py-3 font-mono text-xs uppercase tracking-[0.2em] text-white/70" onClick={() => setMobileOpen(false)} data-testid={`${item.testId}-mobile`}>{item.label}</a>)}<button className="mt-4 font-mono text-xs uppercase tracking-[0.2em] text-[#ff2a2a]" onClick={() => scrollTo("contact")} data-testid="mobile-contact-button">Let&apos;s talk →</button></nav>}
+        {mobileOpen && <nav className="border-t border-white/10 px-5 py-5 md:hidden" data-testid="mobile-navigation">{navItems.map((item) => <a key={item.label} href={item.href} className="block border-b border-white/10 py-3 font-mono text-xs uppercase tracking-[0.2em] text-white/70" onClick={(event) => { if (item.label === "CV") { event.preventDefault(); openCv(); } else { setMobileOpen(false); } }} data-testid={`${item.testId}-mobile`}>{item.label}</a>)}<button className="mt-4 font-mono text-xs uppercase tracking-[0.2em] text-[#ff2a2a]" onClick={() => scrollTo("contact")} data-testid="mobile-contact-button">Let&apos;s talk →</button></nav>}
       </header>
 
       <main id="top">
@@ -587,6 +666,10 @@ export default function Home() {
             <div>
               <h2 className="max-w-3xl font-heading text-5xl font-black uppercase leading-[0.84] tracking-[-0.08em] sm:text-7xl" data-testid="about-title">I turn<br /><span className="text-[#ff2a2a]">curiosity</span><br />into form.</h2>
               <p className="mt-9 max-w-2xl text-base leading-8 text-white/60" data-testid="about-description">I&apos;m Noel, a UI/UX designer who likes connecting the dots between a useful interface and a memorable feeling. My practice moves between product thinking, visual direction, and small experiments that make the internet feel a little more alive.</p>
+              <div className="mt-7 flex flex-wrap items-center gap-3" data-testid="about-cv-actions">
+                <button type="button" className="inline-flex items-center gap-2 border border-[#ff2a2a] px-4 py-2 font-mono text-[10px] uppercase tracking-[0.2em] text-[#ff2a2a] transition hover:bg-[#ff2a2a] hover:text-white" onClick={openCv} data-testid="about-view-cv-button"><Eye size={14} />View CV</button>
+                <a href={cvFile} download="CV_Noel_Vincent_Ramli.pdf" className="inline-flex items-center gap-2 border border-white/30 px-3 py-2 font-mono text-[9px] uppercase tracking-[0.16em] text-white/70 transition hover:border-white hover:text-white" data-testid="about-download-cv-button"><Download size={13} />Download</a>
+              </div>
               <div className="mt-12 grid gap-8 border-t border-white/15 pt-8 sm:grid-cols-2">
                 <div>
                   <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.22em] text-white/35" data-testid="toolbox-label">Toolbox / currently</p>
@@ -603,6 +686,7 @@ export default function Home() {
                     <p><span className="mb-1 block font-mono text-[9px] uppercase tracking-[0.16em] text-white/35">AI &amp; Engineering</span>Prompt Engineering · Generative AI</p>
                     <p><span className="mb-1 block font-mono text-[9px] uppercase tracking-[0.16em] text-white/35">Mindset &amp; Ethics</span>Systems Thinking · Critical Thinking in AI · Ethical AI Usage</p>
                     <p><span className="mb-1 block font-mono text-[9px] uppercase tracking-[0.16em] text-white/35">Design Principles</span>Emotion First · Zero Friction · Contrast as Rhythm</p>
+                    <p><span className="mb-1 block font-mono text-[9px] uppercase tracking-[0.16em] text-white/35">Other Skills</span>Leadership · Artificial Intelligence (AI) · Analysis · Time Management · Web Design · Teamwork · Communication · Adaptability</p>
                   </div>
                 </div>
               </div>
