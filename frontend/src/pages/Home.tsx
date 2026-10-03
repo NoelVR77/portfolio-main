@@ -21,7 +21,7 @@ const contact = {
   ],
 };
 
-const cvFile = "/CV_Noel_Vincent_Ramli.pdf";
+const cvFile = "/CV_Noel_Vincent_Ramli.pdf?v=2";
 
 type ProjectCategory = "All" | "UI/UX" | "Visual";
 
